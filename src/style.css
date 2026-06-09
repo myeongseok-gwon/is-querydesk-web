@@ -16,8 +16,10 @@ body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
 #main{padding:24px 18px}
 .boot{color:var(--muted)}
 
-.signin-wrap{display:flex;justify-content:center;margin-top:6vh}
-.hero{max-width:560px;margin:7vh auto 18px;text-align:center;color:var(--muted)}
+.auth-view{min-height:calc(100vh - 49px);display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:7vh 16px 16px;text-align:center}
+.signin-wrap{display:flex;justify-content:center;width:100%}
+.hero{max-width:560px;margin:0 auto 22px;text-align:center;color:var(--muted)}
 .hero h1{color:var(--ink);font-size:24px;margin-bottom:6px}
 .hero b{color:var(--ink)}
 

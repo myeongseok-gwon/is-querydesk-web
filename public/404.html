@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>QueryDesk — redirecting…</title>
+  <script>
+    // GitHub Pages has no SPA fallback: any unknown path serves this 404.html.
+    // Redirect back to the app root (first path segment) so Clerk auth returns
+    // and deep links don't dead-end. Preserves the hash (Clerk uses #/... routes).
+    (function () {
+      var seg = location.pathname.split("/")[1] || "";
+      var root = location.origin + (seg ? "/" + seg + "/" : "/");
+      location.replace(root + location.hash);
+    })();
+  </script>
+</head>
+<body>Redirecting to <a id="l" href="/">the app</a>…</body>
+</html>

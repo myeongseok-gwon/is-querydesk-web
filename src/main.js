@@ -25,6 +25,12 @@ function frontendApi(pk) {
   return atob(b64).replace(/\$+$/, "");
 }
 
+// The app's own URL (directory of the current page). On GitHub Pages project
+// sites this is "/is-querydesk-web/", on localhost "/". Clerk must redirect
+// back here after sign-in / sign-out, otherwise it lands on "/" (the github.io
+// root) which 404s for a subpath deployment.
+const APP_ROOT = location.pathname.replace(/[^/]*$/, "");
+
 let appMounted = false;
 
 function render() {
@@ -33,12 +39,14 @@ function render() {
     authEl.replaceChildren();
     const ub = document.createElement("div");
     authEl.append(ub);
-    clerk.mountUserButton(ub);
+    clerk.mountUserButton(ub, { afterSignOutUrl: APP_ROOT });
     showApp();
   } else {
     appMounted = false;
     authEl.replaceChildren();
     main.replaceChildren();
+    const view = document.createElement("div");
+    view.className = "auth-view";
     const hero = document.createElement("div");
     hero.className = "hero";
     hero.innerHTML = `<h1>Search the IS corpus by meaning</h1>
@@ -46,8 +54,9 @@ function render() {
       journals, conferences and preprints — ranked by meaning, right in your browser.</p>`;
     const wrap = document.createElement("div");
     wrap.className = "signin-wrap";
-    main.append(hero, wrap);
-    clerk.mountSignIn(wrap);
+    view.append(hero, wrap);
+    main.append(view);
+    clerk.mountSignIn(wrap, { fallbackRedirectUrl: APP_ROOT });
   }
 }
 
@@ -65,7 +74,11 @@ script.setAttribute("data-clerk-publishable-key", PK);
 script.src = `https://${frontendApi(PK)}/npm/@clerk/clerk-js@5/dist/clerk.browser.js`;
 script.addEventListener("load", async () => {
   try {
-    await window.Clerk.load();
+    await window.Clerk.load({
+      afterSignOutUrl: APP_ROOT,
+      signInFallbackRedirectUrl: APP_ROOT,
+      signUpFallbackRedirectUrl: APP_ROOT,
+    });
     render();
     window.Clerk.addListener(() => render());
   } catch (e) {
